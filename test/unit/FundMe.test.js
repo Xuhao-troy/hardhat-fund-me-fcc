@@ -101,15 +101,17 @@ const { developmentChains } = require("../../helper-hardhat-config")
                       await fundMe.provider.getBalance(deployer)
 
                   // Act
-                  const transactionResponse = await fundMe.cheaperWithdraw()
+                  //   const transactionResponse = await fundMe.cheaperWithdraw()
+                  const transactionResponse = await fundMe.withdraw()
+
                   // Let's comapre gas costs :)
                   // const transactionResponse = await fundMe.withdraw()
                   const transactionReceipt = await transactionResponse.wait()
                   const { gasUsed, effectiveGasPrice } = transactionReceipt
                   const withdrawGasCost = gasUsed.mul(effectiveGasPrice)
-                  console.log(`GasCost: ${withdrawGasCost}`)
-                  console.log(`GasUsed: ${gasUsed}`)
-                  console.log(`GasPrice: ${effectiveGasPrice}`)
+                  //   console.log(`GasCost: ${withdrawGasCost}`)
+                  //   console.log(`GasUsed: ${gasUsed}`)
+                  //   console.log(`GasPrice: ${effectiveGasPrice}`)
                   const endingFundMeBalance = await fundMe.provider.getBalance(
                       fundMe.address
                   )
@@ -136,9 +138,8 @@ const { developmentChains } = require("../../helper-hardhat-config")
               })
               it("Only allows the owner to withdraw", async function () {
                   const accounts = await ethers.getSigners()
-                  const fundMeConnectedContract = await fundMe.connect(
-                      accounts[1]
-                  )
+                  const attacker = accounts[1]
+                  const fundMeConnectedContract = await fundMe.connect(attacker)
                   await expect(
                       fundMeConnectedContract.withdraw()
                   ).to.be.revertedWith("FundMe__NotOwner")

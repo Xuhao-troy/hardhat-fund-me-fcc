@@ -4,6 +4,7 @@ pragma solidity ^0.8.7;
 // 2. Imports
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 import "./PriceConverter.sol";
+import "hardhat/console.sol"; //使用hardhat网络进行调试时，可以用console命令进行合约状态打印。
 
 // 3. Interfaces, Libraries, Contracts
 error FundMe__NotOwner();
@@ -66,6 +67,11 @@ contract FundMe {
             funderIndex++
         ) {
             address funder = s_funders[funderIndex];
+            console.log(
+                "Trying to withdraw %s tokens of address[%s]",
+                s_addressToAmountFunded[funder],
+                funder
+            );
             s_addressToAmountFunded[funder] = 0;
         }
         s_funders = new address[](0);

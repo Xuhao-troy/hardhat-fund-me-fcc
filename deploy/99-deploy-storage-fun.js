@@ -1,6 +1,7 @@
 const { network, ethers } = require("hardhat")
 const { developmentChains } = require("../helper-hardhat-config")
 const { verify } = require("../utils/verify")
+const { BigNumber } = require("ethers")
 
 module.exports = async ({ getNamedAccounts, deployments }) => {
     const { deploy, log } = deployments
@@ -15,8 +16,11 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         // we need to wait if on a live network so we can verify properly
         waitConfirmations: network.config.blockConfirmations || 1,
     })
-    
-    if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+
+    if (
+        !developmentChains.includes(network.name) &&
+        process.env.ETHERSCAN_API_KEY
+    ) {
         await verify(funWithStorage.address, [])
     }
 
@@ -48,6 +52,13 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
     // )
     // log(`Location ${firstelementLocation}: ${arrayElement}`)
 
+    // const secondLocation =
+    //     ethers.BigNumber.from(firstelementLocation).add(1)._hex
+    // const arrayElement2 = await ethers.provider.getStorageAt(
+    //     funWithStorage.address,
+    //     secondLocation
+    // )
+    // log(`Location ${secondLocation}: ${arrayElement2}`)
     // Can you write a function that finds the storage slot of the arrays and mappings?
     // And then find the data in those slots?
 }
